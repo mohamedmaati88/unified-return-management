@@ -1,0 +1,51 @@
+id,name,model_id,group_id/id,operation,domain
+access_urp_policy_history_stock_manager,urp.policy.history manager,urp.policy.history,stock.group_stock_manager,r,
+access_urp_policy_history_sale_manager,urp.policy.history sale manager,urp.policy.history,sales_team.group_sale_manager,r,
+access_urp_policy_history_pos_manager,urp.policy.history pos manager,urp.policy.history,point_of_sale.group_pos_manager,r,
+access_urp_sale_batch_salesman,urp.sale.batch salesman,urp.sale.batch,sales_team.group_sale_salesman,r,
+access_urp_sale_batch_stock_user,urp.sale.batch stock user,urp.sale.batch,stock.group_stock_user,r,
+urp_sale_batch_comp_rule,urp.sale.batch multi-company,urp.sale.batch,,crud,"[('company_id', 'in', company_ids)]"
+urp_policy_history_comp_rule,urp.policy.history multi-company,urp.policy.history,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_urp_return_override_stock_user,urp.return.override stock user,urp.return.override,stock.group_stock_user,r,
+access_urp_return_override_line_stock_user,urp.return.override.line stock user,urp.return.override.line,stock.group_stock_user,r,
+access_urp_return_override_salesman,urp.return.override salesman (own sales orders),urp.return.override,sales_team.group_sale_salesman,r,"[('channel', '=', 'sale'), '|', '&', ('exception_id.sale_order_id', '!=', False), '|', ('exception_id.sale_order_id.user_id', '=', user.id), ('exception_id.sale_order_id.user_id', '=', False), '&', ('picking_id.sale_id', '!=', False), '|', ('picking_id.sale_id.user_id', '=', user.id), ('picking_id.sale_id.user_id', '=', False)]"
+access_urp_return_override_salesman_all,urp.return.override salesman all documents,urp.return.override,sales_team.group_sale_salesman_all_leads,r,"[('channel', '=', 'sale')]"
+access_urp_return_override_line_salesman,urp.return.override.line salesman (own sales orders),urp.return.override.line,sales_team.group_sale_salesman,r,"[('override_id.channel', '=', 'sale'), '|', '&', ('override_id.exception_id.sale_order_id', '!=', False), '|', ('override_id.exception_id.sale_order_id.user_id', '=', user.id), ('override_id.exception_id.sale_order_id.user_id', '=', False), '&', ('override_id.picking_id.sale_id', '!=', False), '|', ('override_id.picking_id.sale_id.user_id', '=', user.id), ('override_id.picking_id.sale_id.user_id', '=', False)]"
+access_urp_return_override_line_salesman_all,urp.return.override.line salesman all documents,urp.return.override.line,sales_team.group_sale_salesman_all_leads,r,"[('override_id.channel', '=', 'sale')]"
+urp_return_override_comp_rule,urp.return.override multi-company,urp.return.override,,crud,"[('company_id', 'in', company_ids)]"
+access_urp_return_check_wizard_user,urp.return.check.wizard user,urp.return.check.wizard,stock.group_stock_user,crud,
+access_urp_return_check_wizard_line_user,urp.return.check.wizard.line user,urp.return.check.wizard.line,stock.group_stock_user,crud,
+access_urp_portal_request_salesman,urp.portal.return.request salesman (own sales orders),urp.portal.return.request,sales_team.group_sale_salesman,r,"['|', ('order_id.user_id', '=', user.id), ('order_id.user_id', '=', False)]"
+access_urp_portal_request_salesman_all,urp.portal.return.request salesman all documents,urp.portal.return.request,sales_team.group_sale_salesman_all_leads,r,
+access_urp_portal_request_line_salesman,urp.portal.return.request.line salesman (own sales orders),urp.portal.return.request.line,sales_team.group_sale_salesman,r,"['|', ('order_id.user_id', '=', user.id), ('order_id.user_id', '=', False)]"
+access_urp_portal_request_line_salesman_all,urp.portal.return.request.line salesman all documents,urp.portal.return.request.line,sales_team.group_sale_salesman_all_leads,r,
+access_urp_portal_request_stock_user,urp.portal.return.request stock,urp.portal.return.request,stock.group_stock_user,r,
+access_urp_portal_request_line_stock_user,urp.portal.return.request.line stock,urp.portal.return.request.line,stock.group_stock_user,r,
+urp_portal_request_comp_rule,urp.portal.return.request multi-company,urp.portal.return.request,,crud,"[('company_id', 'in', company_ids)]"
+urp_portal_request_line_comp_rule,urp.portal.return.request.line multi-company,urp.portal.return.request.line,,crud,"[('request_id.company_id', 'in', company_ids)]"
+access_urp_return_allocation_pos_user,urp.return.allocation pos user,urp.return.allocation,point_of_sale.group_pos_user,r,
+access_urp_return_allocation_stock_user,urp.return.allocation stock user,urp.return.allocation,stock.group_stock_user,r,
+access_urp_return_override_pos_user,urp.return.override pos user (pos approvals),urp.return.override,point_of_sale.group_pos_user,r,"[('channel', '=', 'pos')]"
+access_urp_return_override_line_pos_user,urp.return.override.line pos user (pos approvals),urp.return.override.line,point_of_sale.group_pos_user,r,"[('override_id.channel', '=', 'pos')]"
+access_urp_auth_attempt_pos_manager,urp.auth.attempt pos manager,urp.auth.attempt,point_of_sale.group_pos_manager,r,
+access_urp_deadline_log_stock_user,urp.deadline.log stock user,urp.deadline.log,stock.group_stock_user,r,
+access_urp_deadline_log_salesman,urp.deadline.log salesman,urp.deadline.log,sales_team.group_sale_salesman,r,
+urp_deadline_log_comp_rule,urp.deadline.log multi-company,urp.deadline.log,,crud,"[('company_id', 'in', company_ids)]"
+access_urp_return_exception_salesman,urp.return.exception salesman (own sales orders),urp.return.exception,sales_team.group_sale_salesman,crud,"[('source', '=', 'sale'), '|', ('sale_order_id.user_id', '=', user.id), ('sale_order_id.user_id', '=', False)]"
+access_urp_return_exception_salesman_all,urp.return.exception salesman all documents,urp.return.exception,sales_team.group_sale_salesman_all_leads,crud,"[('source', '=', 'sale')]"
+access_urp_return_exception_pos_user,urp.return.exception pos user (pos requests),urp.return.exception,point_of_sale.group_pos_user,crud,"[('source', '=', 'pos')]"
+urp_return_exception_comp_rule,urp.return.exception multi-company,urp.return.exception,,crud,"[('company_id', 'in', company_ids)]"
+access_urp_return_exception_line_salesman,urp.return.exception.line salesman (own sales orders),urp.return.exception.line,sales_team.group_sale_salesman,crud,"[('exception_id.source', '=', 'sale'), '|', ('exception_id.sale_order_id.user_id', '=', user.id), ('exception_id.sale_order_id.user_id', '=', False)]"
+access_urp_return_exception_line_salesman_all,urp.return.exception.line salesman all documents,urp.return.exception.line,sales_team.group_sale_salesman_all_leads,crud,"[('exception_id.source', '=', 'sale')]"
+access_urp_return_exception_line_pos_user,urp.return.exception.line pos user,urp.return.exception.line,point_of_sale.group_pos_user,crud,"[('exception_id.source', '=', 'pos')]"
+urp_return_exception_line_comp_rule,urp.return.exception.line multi-company,urp.return.exception.line,,crud,"[('company_id', 'in', company_ids)]"
+access_urp_return_exception_usage_stock_user,urp.return.exception.usage stock user,urp.return.exception.usage,stock.group_stock_user,r,
+access_urp_return_exception_usage_salesman,urp.return.exception.usage salesman (own sales orders),urp.return.exception.usage,sales_team.group_sale_salesman,r,"[('override_line_id.override_id.channel', '=', 'sale'), '|', '&', ('override_line_id.override_id.exception_id.sale_order_id', '!=', False), '|', ('override_line_id.override_id.exception_id.sale_order_id.user_id', '=', user.id), ('override_line_id.override_id.exception_id.sale_order_id.user_id', '=', False), '&', ('override_line_id.override_id.picking_id.sale_id', '!=', False), '|', ('override_line_id.override_id.picking_id.sale_id.user_id', '=', user.id), ('override_line_id.override_id.picking_id.sale_id.user_id', '=', False)]"
+access_urp_return_exception_usage_salesman_all,urp.return.exception.usage salesman all documents,urp.return.exception.usage,sales_team.group_sale_salesman_all_leads,r,"[('override_line_id.override_id.channel', '=', 'sale')]"
+access_urp_return_exception_usage_pos_user,urp.return.exception.usage pos user (pos approvals),urp.return.exception.usage,point_of_sale.group_pos_user,r,"[('override_line_id.override_id.channel', '=', 'pos')]"
+urp_return_exception_usage_comp_rule,urp.return.exception.usage multi-company,urp.return.exception.usage,,crud,"[('company_id', 'in', company_ids)]"
+access_urp_approval_pin_wizard_pos_manager,urp.approval.pin.wizard pos manager,urp.approval.pin.wizard,point_of_sale.group_pos_manager,crud,
+access_urp_exception_pin_wizard_pos_user,urp.exception.pin.wizard pos user,urp.exception.pin.wizard,point_of_sale.group_pos_user,crud,
+urp_return_override_line_comp_rule,urp.return.override.line multi-company,urp.return.override.line,,crud,"[('company_id', 'in', company_ids)]"
+urp_return_allocation_comp_rule,urp.return.allocation multi-company,urp.return.allocation,,crud,"[('company_id', 'in', company_ids)]"
+urp_auth_attempt_comp_rule,urp.auth.attempt multi-company,urp.auth.attempt,,crud,"[('company_id', 'in', company_ids)]"

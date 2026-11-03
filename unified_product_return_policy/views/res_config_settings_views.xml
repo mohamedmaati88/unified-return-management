@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_urp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.urp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_stock.res_config_settings_view_form_stock"/>
+        <field name="arch" type="xml">
+            <setting id="allow_spontaneous_returns" position="after">
+                <setting id="urp_unified_return_policy" string="Unified Return Policy"
+                         company_dependent="1"
+                         help="Maximum return period for sales, applied by product, then category, then this default. Also caps the portal (spontaneous) return period.">
+                    <field name="urp_enabled"/>
+                    <div class="content-group" invisible="not urp_enabled">
+                        <div class="row mt16">
+                            <label for="urp_default_days" string="Default Return Period (Days)" class="col-lg-5 o_light_label"/>
+                            <field name="urp_default_days" class="w-25"/>
+                        </div>
+                        <div class="row">
+                            <label for="urp_tz" string="Timezone" class="col-lg-5 o_light_label"/>
+                            <field name="urp_tz" required="urp_enabled"/>
+                        </div>
+                        <div class="row">
+                            <label for="urp_date_basis" string="Return Period Calculation Based On" class="col-lg-5 o_light_label"/>
+                            <field name="urp_date_basis" widget="radio" required="urp_enabled"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

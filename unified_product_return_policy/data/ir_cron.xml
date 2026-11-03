@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_urp_policy_consistency" model="ir.cron">
+        <field name="name">Return Policy: history consistency check</field>
+        <field name="model_id" ref="model_urp_policy_history"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_urp_check_consistency()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="urp_return_check_wizard_form" model="ir.ui.view">
+        <field name="name">urp.return.check.wizard.form</field>
+        <field name="model">urp.return.check.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="can_override" invisible="1"/>
+                <field name="can_return_eligible" invisible="1"/>
+                <field name="message" readonly="1" nolabel="1"/>
+                <field name="line_ids" readonly="1">
+                    <list>
+                        <field name="product_id"/>
+                        <field name="kind"/>
+                        <field name="channel"/>
+                        <field name="requested"/>
+                        <field name="eligible"/>
+                        <field name="deadline"/>
+                    </list>
+                </field>
+                <group invisible="not can_override">
+                    <field name="reason" placeholder="Why is this return accepted after the return period?"/>
+                </group>
+                <footer>
+                    <button name="action_return_eligible_only" type="object" string="Return eligible quantities only"
+                            class="btn-primary" invisible="not can_return_eligible"/>
+                    <button name="action_override" type="object" string="Override return period"
+                            class="btn-secondary" invisible="not can_override"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="urp_return_override_view_list" model="ir.ui.view">
+        <field name="name">urp.return.override.list</field>
+        <field name="model">urp.return.override</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="create_date" string="Approved On"/>
+                <field name="kind"/>
+                <field name="channel"/>
+                <field name="user_id"/>
+                <field name="reason"/>
+                <field name="pos_order_id" optional="show"/>
+                <field name="pos_session_id" optional="hide"/>
+                <field name="picking_id" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="usage"/>
+                <field name="consumed_at" string="Used On"/>
+            </list>
+        </field>
+    </record>
+    <record id="urp_return_override_view_form" model="ir.ui.view">
+        <field name="name">urp.return.override.form</field>
+        <field name="model">urp.return.override</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="kind"/>
+                            <field name="channel"/>
+                            <field name="user_id"/>
+                            <field name="create_date" string="Approved On"/>
+                            <field name="usage"/>
+                            <field name="consumed_at" string="Used On"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="pos_session_id" invisible="not pos_session_id"/>
+                            <field name="pos_order_id" invisible="not pos_order_id"/>
+                            <field name="pos_currency_id" invisible="1"/>
+                            <field name="pos_amount_total" invisible="not pos_order_id"/>
+                            <field name="picking_id" invisible="not picking_id"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1" colspan="2"/>
+                    </group>
+                    <field name="line_ids">
+                        <list>
+                            <field name="product_id"/>
+                            <field name="qty" string="Approved Quantity"/>
+                            <field name="refunded_line_id" string="Original POS Line"/>
+                            <field name="origin_move_id" string="Original Delivery"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_urp_return_override" model="ir.actions.act_window">
+        <field name="name">Return Overrides &amp; Exceptions</field>
+        <field name="res_model">urp.return.override</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_urp_return_override" name="Return Period Overrides" parent="stock.menu_stock_config_settings"
+              action="action_urp_return_override" groups="stock.group_stock_manager" sequence="91"/>
+
+    <record id="view_picking_form_urp" model="ir.ui.view">
+        <field name="name">stock.picking.form.urp</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="urp_override_id" invisible="not urp_override_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="urp_deadline_log_view_list" model="ir.ui.view">
+        <field name="name">urp.deadline.log.list</field>
+        <field name="model">urp.deadline.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="create_date" string="Changed On"/>
+                <field name="user_id"/>
+                <field name="picking_id"/>
+                <field name="move_id"/>
+                <field name="old_date"/>
+                <field name="new_date"/>
+                <field name="old_deadline"/>
+                <field name="new_deadline"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_urp_deadline_log" model="ir.actions.act_window">
+        <field name="name">Return Deadline Changes</field>
+        <field name="res_model">urp.deadline.log</field>
+        <field name="view_mode">list</field>
+    </record>
+    <menuitem id="menu_urp_deadline_log" name="Return Deadline Changes" parent="stock.menu_stock_config_settings"
+              action="action_urp_deadline_log" groups="stock.group_stock_manager" sequence="92"/>
+</odoo>

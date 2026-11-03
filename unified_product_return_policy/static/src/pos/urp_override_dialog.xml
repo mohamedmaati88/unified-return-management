@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="unified_product_return_policy.UrpOverrideDialog">
+        <Dialog title.translate="POS Administrator approval" size="'md'">
+            <p t-if="this.props.message" class="text-muted" style="white-space: pre-line" t-out="this.props.message"/>
+            <ul t-if="this.props.labels.length" class="urp-approval-lines mb-2">
+                <t t-foreach="this.props.labels" t-as="lbl" t-key="lbl_index">
+                    <li t-out="lbl"/>
+                </t>
+            </ul>
+            <div class="d-flex flex-column gap-2">
+                <t t-if="this.state.mode === 'pin'">
+                    <input class="form-control urp-approval-pin" type="password" inputmode="numeric" autocomplete="off"
+                           placeholder="POS Manager approval PIN" t-model.proxy="this.state.pin"/>
+                </t>
+                <t t-else="">
+                    <input class="form-control" type="text" placeholder="Manager login" autocomplete="off" t-model.proxy="this.state.login"/>
+                    <input class="form-control" type="password" placeholder="Password" autocomplete="new-password" t-model.proxy="this.state.password"/>
+                    <input class="form-control" type="text" inputmode="numeric" placeholder="Authenticator code (if enabled)" autocomplete="one-time-code" t-model.proxy="this.state.totp"/>
+                </t>
+                <textarea class="form-control" rows="2" placeholder="Reason (required)" t-model.proxy="this.state.reason"/>
+                <div t-if="this.state.error" class="alert alert-danger mb-0" t-out="this.state.error"/>
+                <a t-if="this.props.pinMode and this.state.mode === 'pin'" href="#" class="small urp-use-account"
+                   t-on-click.prevent="() => this.switchMode('account')">POS Administrator without employee PIN: use an Odoo account</a>
+                <a t-if="this.props.pinMode and this.state.mode === 'account'" href="#" class="small urp-use-pin"
+                   t-on-click.prevent="() => this.switchMode('pin')">Use a POS Manager approval PIN</a>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-att-disabled="!this.canConfirm" t-on-click="this.confirm">Authorize</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

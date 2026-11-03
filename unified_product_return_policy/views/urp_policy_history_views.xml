@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="urp_policy_history_view_list" model="ir.ui.view">
+        <field name="name">urp.policy.history.list</field>
+        <field name="model">urp.policy.history</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="valid_from"/>
+                <field name="scope"/>
+                <field name="res_id"/>
+                <field name="company_id"/>
+                <field name="origin"/>
+                <field name="enabled" optional="show"/>
+                <field name="default_days" optional="show"/>
+                <field name="tz" optional="hide"/>
+                <field name="portal_allowed" optional="show"/>
+                <field name="portal_days" optional="show"/>
+                <field name="use_custom" optional="show"/>
+                <field name="custom_days" optional="show"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="user_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_urp_policy_history" model="ir.actions.act_window">
+        <field name="name">Return Policy History</field>
+        <field name="res_model">urp.policy.history</field>
+        <field name="view_mode">list</field>
+    </record>
+    <menuitem id="menu_urp_policy_history" name="Return Policy History" parent="stock.menu_stock_config_settings"
+              action="action_urp_policy_history" groups="stock.group_stock_manager" sequence="90"/>
+</odoo>

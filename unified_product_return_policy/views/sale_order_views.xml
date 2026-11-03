@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_urp" model="ir.ui.view">
+        <field name="name">sale.order.form.urp</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="urp_return_policy" string="Return Policy" invisible="not urp_batch_ids">
+                    <field name="urp_batch_ids" readonly="1">
+                        <list create="0" delete="0">
+                            <field name="product_id"/>
+                            <field name="approved_at"/>
+                            <field name="qty"/>
+                            <field name="qty_cancelled" optional="show"/>
+                            <field name="return_days"/>
+                            <field name="policy_source"/>
+                            <field name="portal_eligible" optional="show"/>
+                            <field name="portal_days" optional="show"/>
+                            <field name="tz" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_urp" model="ir.ui.view">
+        <field name="name">stock.move.form.urp</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group name="urp" string="Return Policy" invisible="not urp_deadline and not urp_validated_at">
+                    <field name="urp_batch_id" invisible="not urp_batch_id"/>
+                    <field name="urp_date_basis"/>
+                    <field name="urp_validated_at"/>
+                    <field name="urp_deadline"/>
+                    <field name="urp_portal_deadline" invisible="not urp_portal_deadline"/>
+                </group>
+                <group name="urp_claim" string="Return Request" invisible="not urp_claimed_at">
+                    <field name="urp_claimed_at"/>
+                    <field name="urp_claim_qty"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

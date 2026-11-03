@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================================================================ requests -->
+    <record id="urp_return_exception_view_form" model="ir.ui.view">
+        <field name="name">urp.return.exception.form</field>
+        <field name="model">urp.return.exception</field>
+        <field name="arch" type="xml">
+            <form string="Return Exception" create="0">
+                <header>
+                    <button name="action_submit" string="Submit for Approval" type="object" class="oe_highlight"
+                            invisible="state != 'draft' or not needs_approval"/>
+                    <button name="action_submit" string="Create Return" type="object" class="oe_highlight"
+                            invisible="state != 'draft' or needs_approval"
+                            help="Within the return period: the Return Transfer is created now, Inventory validates it on receipt."/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            invisible="not can_approve or not needs_approval"
+                            confirm="Approve this return exception for the requested quantities? The Return Transfer is created automatically."/>
+                    <button name="action_urp_create_returns" string="Create Missing Returns" type="object"
+                            invisible="not can_create_returns"
+                            help="Approved quantities without an open Return Transfer (e.g. a cancelled one)."/>
+                    <button name="action_reject" string="Reject" type="object" invisible="not can_approve"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('used', 'rejected', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,used"/>
+                    <field name="can_approve" invisible="1"/>
+                    <field name="needs_approval" invisible="1"/>
+                    <field name="can_create_returns" invisible="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_urp_view_returns" type="object" class="oe_stat_button" icon="fa-truck"
+                                invisible="not return_picking_count">
+                            <field name="return_picking_count" widget="statinfo" string="Return Transfers"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="source"/>
+                            <field name="sale_order_id" invisible="source != 'sale'"/>
+                            <field name="pos_order_id" invisible="source != 'pos'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="requested_by"/>
+                            <field name="request_date"/>
+                            <field name="approved_by" invisible="not approved_by"/>
+                            <field name="approved_at" invisible="not approved_at"/>
+                            <field name="rejected_by" invisible="not rejected_by"/>
+                            <field name="rejected_at" invisible="not rejected_at"/>
+                            <field name="cancelled_by" invisible="not cancelled_by"/>
+                            <field name="cancelled_at" invisible="not cancelled_at"/>
+                        </group>
+                    </group>
+                    <group string="Reason for Exception">
+                        <field name="reason" nolabel="1" colspan="2" readonly="state != 'draft'" required="needs_approval"
+                               placeholder="Why should this return be accepted although the policy does not allow it?"/>
+                    </group>
+                    <field name="return_picking_ids" invisible="not return_picking_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="scheduled_date"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                    <field name="line_ids" readonly="state != 'draft'">
+                        <list create="0" editable="bottom">
+                            <field name="delivery_name"/>
+                            <field name="product_id"/>
+                            <field name="exception_type"/>
+                            <field name="policy_label"/>
+                            <field name="delivered_qty"/>
+                            <field name="returned_qty"/>
+                            <field name="pending_qty" optional="show"/>
+                            <field name="available_qty"/>
+                            <field name="requested_qty"/>
+                            <field name="approved_qty"/>
+                            <field name="used_qty"/>
+                            <field name="remaining_qty"/>
+                        </list>
+                    </field>
+                    <group invisible="not rejection_note">
+                        <field name="rejection_note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="urp_return_exception_view_list" model="ir.ui.view">
+        <field name="name">urp.return.exception.list</field>
+        <field name="model">urp.return.exception</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-info="state == 'pending'" decoration-muted="state in ('rejected', 'cancelled', 'used')">
+                <field name="name"/>
+                <field name="source"/>
+                <field name="sale_order_id" optional="show"/>
+                <field name="pos_order_id" optional="show"/>
+                <field name="requested_by"/>
+                <field name="request_date"/>
+                <field name="approved_by"/>
+                <field name="approved_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="urp_return_exception_view_search" model="ir.ui.view">
+        <field name="name">urp.return.exception.search</field>
+        <field name="model">urp.return.exception</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="sale_order_id"/>
+                <field name="pos_order_id"/>
+                <field name="requested_by"/>
+                <filter name="pending" string="Pending Approval" domain="[('state', '=', 'pending')]"/>
+                <filter name="open" string="Approved, not used up" domain="[('state', 'in', ('approved', 'partially_used'))]"/>
+                <filter name="mine" string="My Requests" domain="[('requested_by', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_urp_return_exception_sale" model="ir.actions.act_window">
+        <field name="name">Return Requests</field>
+        <field name="res_model">urp.return.exception</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('source', '=', 'sale')]</field>
+        <field name="context">{'create': False, 'search_default_pending': 1}</field>
+    </record>
+    <record id="action_urp_return_exception_pos" model="ir.actions.act_window">
+        <field name="name">Return Exceptions</field>
+        <field name="res_model">urp.return.exception</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('source', '=', 'pos')]</field>
+        <field name="context">{'create': False, 'search_default_pending': 1}</field>
+    </record>
+    <menuitem id="menu_urp_return_exception_sale" name="Return Requests" parent="sale.sale_order_menu"
+              action="action_urp_return_exception_sale" groups="sales_team.group_sale_salesman" sequence="40"/>
+    <menuitem id="menu_urp_return_exception_pos" name="Return Exceptions" parent="point_of_sale.menu_point_of_sale"
+              action="action_urp_return_exception_pos" groups="point_of_sale.group_pos_user" sequence="60"/>
+    <!-- audit trail of every approval (existing read rights, no new right) -->
+    <menuitem id="menu_urp_return_override_sale" name="Return Overrides &amp; Exceptions" parent="sale.menu_sale_report"
+              action="action_urp_return_override" groups="sales_team.group_sale_manager" sequence="90"/>
+    <menuitem id="menu_urp_return_override_pos" name="Return Overrides &amp; Exceptions" parent="point_of_sale.menu_point_rep"
+              action="action_urp_return_override" groups="point_of_sale.group_pos_manager" sequence="90"/>
+
+    <!-- ================================================================ original orders -->
+    <record id="view_order_form_urp_exception" model="ir.ui.view">
+        <field name="name">sale.order.form.urp.exception</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_urp_request_exception" string="Return Request" type="object"
+                        invisible="state != 'sale'" groups="sales_team.group_sale_salesman"
+                        help="Return delivered products: within the return period the Return Transfer is created at once; otherwise a Sales Administrator approves first."/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_urp_view_exceptions" type="object" class="oe_stat_button" icon="fa-undo"
+                        invisible="not urp_exception_count" groups="sales_team.group_sale_salesman">
+                    <field name="urp_exception_count" widget="statinfo" string="Return Requests"/>
+                </button>
+                <button name="action_urp_view_returns" type="object" class="oe_stat_button" icon="fa-truck"
+                        invisible="not urp_return_count" groups="sales_team.group_sale_salesman">
+                    <field name="urp_return_count" widget="statinfo" string="Return Transfers"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form_urp_exception" model="ir.ui.view">
+        <field name="name">pos.order.form.urp.exception</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="shipping_date" invisible="1"/>
+                <button name="action_urp_request_exception" string="Request Return Exception" type="object"
+                        invisible="state == 'draft' or not shipping_date" groups="point_of_sale.group_pos_user"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_urp_view_exceptions" type="object" class="oe_stat_button" icon="fa-undo"
+                        invisible="not urp_exception_count" groups="point_of_sale.group_pos_user">
+                    <field name="urp_exception_count" widget="statinfo" string="Return Exceptions"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================ Inventory: what may be executed -->
+    <record id="view_picking_form_urp_exception" model="ir.ui.view">
+        <field name="name">stock.picking.form.urp.exception</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids']/list/field[@name='product_uom_qty']" position="before">
+                <field name="urp_portal_line_id" optional="show"
+                       column_invisible="not parent.return_id or parent.picking_type_code != 'incoming'"
+                       readonly="state in ('done', 'cancel')" options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids']/list/field[@name='product_uom_qty']" position="after">
+                <field name="urp_returnable_qty" optional="show" column_invisible="not parent.return_id"
+                       decoration-danger="product_uom_qty &gt; urp_returnable_qty"/>
+            </xpath>
+            <xpath expr="//page[@name='extra']" position="after">
+                <page string="Approved Return Exceptions" name="urp_approvals" invisible="not urp_approval_line_ids">
+                    <field name="urp_approval_line_ids" readonly="1">
+                        <list>
+                            <field name="product_id"/>
+                            <field name="exception_type"/>
+                            <field name="qty" string="Approved"/>
+                            <field name="used_qty"/>
+                            <field name="remaining_qty"/>
+                            <field name="usable" string="Open"/>
+                            <field name="approver_id"/>
+                            <field name="approved_at"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================ approvals audit (existing screen) -->
+    <record id="urp_return_override_view_form_exception" model="ir.ui.view">
+        <field name="name">urp.return.override.form.exception</field>
+        <field name="model">urp.return.override</field>
+        <field name="inherit_id" ref="unified_product_return_policy.urp_return_override_view_form"/>
+        <field name="arch" type="xml">
+            <field name="picking_id" position="after">
+                <field name="exception_id" invisible="not exception_id"
+                       groups="sales_team.group_sale_salesman,point_of_sale.group_pos_user"/>
+            </field>
+            <xpath expr="//field[@name='line_ids']/list/field[@name='qty']" position="before">
+                <field name="exception_type"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']/list/field[@name='qty']" position="after">
+                <field name="used_qty"/>
+                <field name="remaining_qty"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']" position="after">
+                <group string="Executions">
+                    <field name="usage_ids" nolabel="1" colspan="2">
+                        <list>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="picking_id"/>
+                            <field name="qty"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
