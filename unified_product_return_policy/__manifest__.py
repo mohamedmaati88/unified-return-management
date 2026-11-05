@@ -1,7 +1,7 @@
 {
     "name": "Unified Return Management",
     "version": "20.0.1.0.0",
-    "summary": "Return management (RMA): one return period per product, category or company, "
+    "summary": "Return policy enforcement: one return period per product, category or company, "
                "enforced on Sales, Inventory, POS and Customer Portal returns, with manager approvals",
     "category": "Sales/Sales",
     "author": "Mohamed Maati",
