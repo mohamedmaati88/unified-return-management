@@ -10,7 +10,7 @@ Dependencies installed automatically: `sale_stock` (Sales, Inventory), `pos_stoc
 (Point of Sale with employees). *Log in with Employees* does not have to be enabled on your points of
 sale.
 
-Tested on Odoo 20 Enterprise. Odoo 20 Community has not been verified. Install on a test database
+Tested on Odoo 20 Community and Odoo 20 Enterprise. Install on a test database
 first and check your own flows before using it in production.
 
 ## 2. Enable the policy per company
