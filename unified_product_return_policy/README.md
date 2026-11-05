@@ -2,7 +2,7 @@
 
 Technical name: `unified_product_return_policy` - version 20.0.1.0.0 - license LGPL-3 - free.
 
-Return management (RMA) for Odoo 20: one return period, in days, per product, applied to Sales /
+Return policy enforcement for Odoo 20: one return period, in days, per product, applied to Sales /
 Inventory returns, the Customer Portal and the Point of Sale, checked on the server, with manager
 approvals for exceptions and an audit trail.
 
@@ -25,7 +25,7 @@ approvals for exceptions and an audit trail.
 
 ## Requirements
 
-* Odoo 20. Tested on Odoo 20 Enterprise; Odoo 20 Community has not been verified.
+* Odoo 20. Tested on Odoo 20 Community and Odoo 20 Enterprise.
 * Depends on `sale_stock`, `pos_stock` and `pos_hr` (installed automatically).
 * No new security group: the standard Sales, Inventory and Point of Sale groups are used.
 
